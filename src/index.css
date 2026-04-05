@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    @apply bg-slate-50 text-slate-900 antialiased selection:bg-indigo-200 selection:text-indigo-900;
+  }
+}
+@layer components {
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-xl border border-white max-sm:border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300;
+  }
+  .glass-panel {
+    @apply bg-white/80 backdrop-blur-2xl border border-white/50 shadow-xl;
+  }
+}
