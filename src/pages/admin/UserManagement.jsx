@@ -49,13 +49,15 @@ const UserManagement = () => {
     if (!formData.password || formData.password.length < 6) return toast.error('Initial Password must be at least 6 characters.');
     if (!formData.role) return toast.error('Role Authority is required.');
     if (!formData.department) return toast.error('Department assignment is required.');
-    const phoneRegex = /^\+?[\d\s-]{10,}$/;
+    const phoneRegex = /^[0-9]{10}$/;
     if (formData.role === "Student") {
-        if (!formData.studentId.trim()) return toast.error('Student ID is strictly required.');
-        if (!phoneRegex.test(formData.mobileNumber)) return toast.error('Provide a valid mobile number (min 10 digits).');
+      if (!formData.studentId.trim()) return toast.error('Student ID is strictly required.');
+      if (!phoneRegex.test(formData.mobileNumber)) return toast.error('Provide a valid mobile number (min 10 digits).');
     } else {
-        if (!formData.employeeId.trim()) return toast.error('Employee ID is strictly required.');
-        if (!phoneRegex.test(formData.phoneNumber)) return toast.error('Provide a valid phone number (min 10 digits).');
+      if (!formData.employeeId.trim()) return toast.error('Employee ID is strictly required.');
+      if (!phoneRegex.test(formData.phone)) {
+        return toast.error('Phone number must be exactly 10 digits.');
+      }
     }
     try {
       await api.post("/api/admin/users", formData);
@@ -122,43 +124,43 @@ const UserManagement = () => {
           </thead>
           <tbody>
             <AnimatePresence>
-            {users.map((u, index) => (
-              <motion.tr
-                initial={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
-                animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4, delay: index * 0.05, type: "spring", stiffness: 200, damping: 20 }}
-                key={u._id}
-                className="border-b border-gray-50 hover:bg-indigo-50/20 transition-colors group cursor-default"
-              >
-                <td className="p-5">
-                  <p className="font-bold text-gray-900 leading-tight">
-                    {u.name}
-                  </p>
-                  <p className="text-xs text-gray-500 font-medium">{u.email}</p>
-                </td>
-                <td className="p-5">
-                  <span
-                    className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg border ${u.role === "Admin" ? "bg-indigo-50 text-indigo-700 border-indigo-200" : u.role === "Student" ? "bg-gray-50 text-gray-600 border-gray-200" : "bg-blue-50 text-blue-700 border-blue-200"}`}
-                  >
-                    {u.role}
-                  </span>
-                </td>
-                <td className="p-5 text-sm font-bold text-gray-600">
-                  {u.department || "—"}
-                </td>
-                <td className="p-5 text-right">
-                  <motion.button
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => handleDelete(u._id)}
-                    className="text-red-400 hover:text-red-600 bg-red-50 hover:bg-red-100 p-2.5 rounded-lg transition-colors opacity-0 group-hover:opacity-100 outline-none"
-                  >
-                    <Trash2 size={16} />
-                  </motion.button>
-                </td>
-              </motion.tr>
-            ))}
+              {users.map((u, index) => (
+                <motion.tr
+                  initial={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
+                  animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4, delay: index * 0.05, type: "spring", stiffness: 200, damping: 20 }}
+                  key={u._id}
+                  className="border-b border-gray-50 hover:bg-indigo-50/20 transition-colors group cursor-default"
+                >
+                  <td className="p-5">
+                    <p className="font-bold text-gray-900 leading-tight">
+                      {u.name}
+                    </p>
+                    <p className="text-xs text-gray-500 font-medium">{u.email}</p>
+                  </td>
+                  <td className="p-5">
+                    <span
+                      className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg border ${u.role === "Admin" ? "bg-indigo-50 text-indigo-700 border-indigo-200" : u.role === "Student" ? "bg-gray-50 text-gray-600 border-gray-200" : "bg-blue-50 text-blue-700 border-blue-200"}`}
+                    >
+                      {u.role}
+                    </span>
+                  </td>
+                  <td className="p-5 text-sm font-bold text-gray-600">
+                    {u.department || "—"}
+                  </td>
+                  <td className="p-5 text-right">
+                    <motion.button
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => handleDelete(u._id)}
+                      className="text-red-400 hover:text-red-600 bg-red-50 hover:bg-red-100 p-2.5 rounded-lg transition-colors opacity-0 group-hover:opacity-100 outline-none"
+                    >
+                      <Trash2 size={16} />
+                    </motion.button>
+                  </td>
+                </motion.tr>
+              ))}
             </AnimatePresence>
             {users.length === 0 && (
               <tr>
